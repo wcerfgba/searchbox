@@ -32,6 +32,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+	return;
 	if (event.request.method !== 'GET' || event.request.headers.has('range')) return;
 
 	const url = new URL(event.request.url);
