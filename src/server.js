@@ -16,9 +16,9 @@ const source = ({ url, titleSelector, linkSelector, descriptionSelector }) => as
 		data = data.data;
 		data = (new JSDOM(data)).window.document;
 		let _results = {
-			titles: Array.prototype.map.call(data.querySelectorAll(titleSelector), el => el.innerHTML),
+			titles: Array.prototype.map.call(data.querySelectorAll(titleSelector), el => el.textContent),
 			links: Array.prototype.map.call(data.querySelectorAll(linkSelector), el => el.href),
-			descriptions: Array.prototype.map.call(data.querySelectorAll(descriptionSelector), el => el.innerHTML)
+			descriptions: Array.prototype.map.call(data.querySelectorAll(descriptionSelector), el => el.textContent)
 		};
 		let results = _results.titles.map((title, i) => ({
 			title,
@@ -42,6 +42,12 @@ const SOURCES = {
 		titleSelector: 'div.title h3.medium-heading a',
 		linkSelector: 'div.title h3.medium-heading a',
 		descriptionSelector: 'div.title h3.medium-heading a',
+	},
+	sciencedirect: {
+		url: (q) => `https://www.sciencedirect.com/search/advanced?qs=${q}`,
+		titleSelector: 'div.result-item-container a.result-list-title-link',
+		linkSelector: 'div.result-item-container a.result-list-title-link',
+		descriptionSelector: 'div.result-item-container ol.SubType',
 	}
 }
 

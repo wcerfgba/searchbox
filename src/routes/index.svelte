@@ -8,4 +8,4 @@
 <svelte:head>
 </svelte:head>
 
-<Searcher source="jstor" query="trigger points"/>
+<Searcher source="sciencedirect" query="trigger points"/>
