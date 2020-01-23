@@ -8,8 +8,13 @@
 </script>
 
 <style>
-.searcher-container {
-  width: 30rem;
+.container {
+  min-width: 30rem;
+  max-width: 30rem;
+  display: flex;
+  padding: 1rem;
+  flex-flow: column nowrap;
+  overflow-y: auto;
 }
 
 a {
@@ -30,7 +35,7 @@ a p:last-child {
 }
 </style>
 
-<div class="searcher-container">
+<div class="container">
   <h2>{source}</h2>
 
   {#each results as result}
