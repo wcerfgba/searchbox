@@ -20,6 +20,19 @@
   .container {
     height: 2rem;
   }
+
+  input {
+		font-family: Poppins;
+		font-size: 2.7647999999999997em;
+		line-height: 4rem;
+		font-weight: 400;
+		font-style: normal;
+		letter-spacing: 0em;
+    margin: 0;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 0 0.25em;
+  }
 </style>
 
 <div class="container">
