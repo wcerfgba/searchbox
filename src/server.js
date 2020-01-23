@@ -3,24 +3,50 @@ import polka from 'polka';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 import axios from 'axios';
+import { JSDOM } from 'jsdom';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-const proxy = async (url, res) => {
+const source = ({ url, titleSelector, linkSelector, descriptionSelector }) => async (req, res) => {
 	try {
-		const fetchReq = await axios.get(url, {
+		let data = await axios.get(url(req.params.query), {
 			headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
 		}});
-		res.end(fetchReq.data);
+		data = data.data;
+		data = (new JSDOM(data)).window.document;
+		let _results = {
+			titles: Array.prototype.map.call(data.querySelectorAll(titleSelector), el => el.innerHTML),
+			links: Array.prototype.map.call(data.querySelectorAll(linkSelector), el => el.href),
+			descriptions: Array.prototype.map.call(data.querySelectorAll(descriptionSelector), el => el.innerHTML)
+		};
+		let results = _results.titles.map((title, i) => ({
+			title,
+			link: _results.links[i],
+			description: _results.descriptions[i]
+		}));
+		res.writeHead(200, {
+			'Content-Type': 'application/json'
+		});
+		res.end(JSON.stringify(results));
 	} catch (e) {
 		console.error(e);
+		res.writeHead(500);
 		res.end();
 	}
 }
 
+const SOURCES = {
+	jstor: {
+		url: (q) => `https://www.jstor.org/action/doBasicSearch?Query=${q}&acc=off&wc=on&fc=off&group=none`,
+		titleSelector: 'div.title h3.medium-heading a',
+		linkSelector: 'div.title h3.medium-heading a',
+		descriptionSelector: 'div.title h3.medium-heading a',
+	}
+}
+
 polka() // You can also use Express
-	.get('/jstor/:query', (req, res) => proxy(`https://www.jstor.org/action/doBasicSearch?Query=${req.params.query}&acc=off&wc=on&fc=off&group=none`, res))
+	.get('/:source/:query', (req, res) => source(SOURCES[req.params.source])(req, res))
 	.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),

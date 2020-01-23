@@ -1,13 +1,11 @@
 <script>
-	import SearcherJSTOR from '../components/SearcherJSTOR.svelte';
+	import Searcher from '../components/Searcher.svelte';
 </script>
 
 <style>
-
 </style>
 
 <svelte:head>
-	<title>Sapper project template</title>
 </svelte:head>
 
-<SearcherJSTOR query="trigger points"/>
+<Searcher source="jstor" query="trigger points"/>
