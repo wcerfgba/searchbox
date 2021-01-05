@@ -12,7 +12,7 @@
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-cache-plugin": "^0.1.0",
     "compression": "^1.7.1",
     "jsdom": "^16.0.1",
